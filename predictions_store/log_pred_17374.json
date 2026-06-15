@@ -1,0 +1,18 @@
+{
+    "timestamp_ejecucion": "2026-04-14T11:40:00",
+    "batch_id": "batch_17374",
+    "predicciones": [
+        {
+            "hora": 0,
+            "demanda_predicha": 34
+        },
+        {
+            "hora": 1,
+            "demanda_predicha": 18
+        },
+        {
+            "hora": 2,
+            "demanda_predicha": 12
+        }
+    ]
+}

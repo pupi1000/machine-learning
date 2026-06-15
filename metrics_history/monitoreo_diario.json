@@ -1,0 +1,162 @@
+[
+    {
+        "fecha": "2023-06-13",
+        "mae": 21.0,
+        "rmse": 13.5,
+        "mae_movil": 21.0,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-01",
+        "mae": 21.8,
+        "rmse": 29.5,
+        "mae_movil": 21.4,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-02",
+        "mae": 23.4,
+        "rmse": 32.1,
+        "mae_movil": 22.07,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-03",
+        "mae": 22.1,
+        "rmse": 30.8,
+        "mae_movil": 22.07,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-04",
+        "mae": 25.6,
+        "rmse": 36.4,
+        "mae_movil": 22.78,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-05",
+        "mae": 24.2,
+        "rmse": 34.8,
+        "mae_movil": 23.02,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-06",
+        "mae": 7.5,
+        "rmse": 5.0,
+        "mae_movil": 20.8,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-07",
+        "mae": 22.5,
+        "rmse": 31.9,
+        "mae_movil": 21.01,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-08",
+        "mae": 21.9,
+        "rmse": 29.8,
+        "mae_movil": 21.03,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-09",
+        "mae": 24.1,
+        "rmse": 33.2,
+        "mae_movil": 21.13,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-10",
+        "mae": 28.5,
+        "rmse": 38.6,
+        "mae_movil": 22.04,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-11",
+        "mae": 34.2,
+        "rmse": 46.1,
+        "mae_movil": 23.27,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-12",
+        "mae": 39.8,
+        "rmse": 52.4,
+        "mae_movil": 25.5,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-13",
+        "mae": 45.3,
+        "rmse": 59.7,
+        "mae_movil": 30.9,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-14",
+        "mae": 16.0,
+        "rmse": 20.0,
+        "mae_movil": 29.97,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-18",
+        "mae": 23.5,
+        "rmse": 23.5,
+        "mae_movil": 30.2,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-20",
+        "mae": 29.0,
+        "rmse": 35.0,
+        "mae_movil": 30.9,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-21",
+        "mae": 25.0,
+        "rmse": 35.0,
+        "mae_movil": 30.4,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    },
+    {
+        "fecha": "2026-06-24",
+        "mae": 66.5,
+        "rmse": 35.0,
+        "mae_movil": 35.01,
+        "registros_evaluados": 24,
+        "drift_detected": true
+    },
+    {
+        "fecha": "2026-06-25",
+        "mae": 7.5,
+        "rmse": 5.0,
+        "mae_movil": 30.4,
+        "registros_evaluados": 24,
+        "drift_detected": false
+    }
+]

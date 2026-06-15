@@ -1,0 +1,18 @@
+{
+    "architecture": {
+        "input_size": 12,
+        "hidden_size": 64,
+        "num_layers": 2,
+        "output_size": 1
+    },
+    "pipeline_params": {
+        "lookback_hours": 24,
+        "metrics_threshold_mae": 35.0,
+        "experiment_name": "Bike_Sharing_MLOps_Fase4"
+    },
+    "paths": {
+        "dataset_raw": "data/hour.csv",
+        "model_output": "models/bike_model_v1.pkl",
+        "telemetry_log": "metrics_history/monitoreo_diario.json"
+    }
+}
