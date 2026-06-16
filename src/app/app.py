@@ -245,10 +245,19 @@ st.markdown("""
 # 2. Rutas y Clases de Modelos
 # ---------------------------------------------------------
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+CONFIG_PATH = os.path.join(BASE_DIR, "src", "config", "config.json")
 DATA_PATH = os.path.join(BASE_DIR, "data", "hour.csv")
 MODELS_DIR = os.path.join(BASE_DIR, "src", "models")
 METRICS_PATH = os.path.join(BASE_DIR, "metrics_history", "monitoreo_diario.json")
 PRED_STORE_DIR = os.path.join(BASE_DIR, "predictions_store")
+
+# Cargar parámetros de configuración dinámicamente
+try:
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        config_data = json.load(f)
+    MAE_THRESHOLD = float(config_data.get("pipeline_params", {}).get("metrics_threshold_mae", 35.0))
+except Exception as e:
+    MAE_THRESHOLD = 35.0
 
 # Definición del modelo LSTM exactamente como en FASE_3
 class DemandaLSTM(nn.Module):
@@ -932,7 +941,7 @@ if resources_ok:
     # ---------------------------------------------------------
     with tab3:
         st.header("Rendimiento del Modelo y Telemetría de Desviación")
-        st.write("Este panel monitorea las métricas diarias del modelo en producción. El sistema dispara alertas de Data Drift cuando la media móvil del MAE (calculada sobre los últimos días evaluados) supera el umbral crítico de **35.0**.")
+        st.write(f"Este panel monitorea las métricas diarias del modelo en producción. El sistema dispara alertas de Data Drift cuando la media móvil del MAE (calculada sobre los últimos días evaluados) supera el umbral crítico de **{MAE_THRESHOLD}**.")
         
         if os.path.exists(METRICS_PATH):
             with open(METRICS_PATH, "r", encoding="utf-8") as f:
@@ -974,7 +983,7 @@ if resources_ok:
             latest_rmse = float(latest_row['rmse'])
             
             # Alerta visual interactiva
-            if latest_mae_movil > 35.0:
+            if latest_mae_movil > MAE_THRESHOLD:
                 st.markdown(f"""
                     <style>
                     @keyframes pulse-red {{
@@ -1008,7 +1017,7 @@ if resources_ok:
                             <div>
                                 <h3 style="font-size: 14px; font-weight: 700; color: #7f1d1d; margin: 0;">🚨 ALERTA OPERACIONAL: Se detectó Data Drift</h3>
                                 <p style="font-size: 11px; color: #991b1b; margin: 4px 0 0 0; font-weight: 500; line-height: 1.4;">
-                                    La media móvil del error absoluto (MAE 7d) ha alcanzado un valor acumulado de <strong style="font-family: monospace;">{latest_mae_movil:.2f} MAE</strong>, superando el umbral de tolerancia operacional de <strong>35.0</strong>.
+                                    La media móvil del error absoluto (MAE 7d) ha alcanzado un valor acumulado de <strong style="font-family: monospace;">{latest_mae_movil:.2f} MAE</strong>, superando el umbral de tolerancia operacional de <strong>{MAE_THRESHOLD}</strong>.
                                 </p>
                                 <ul style="margin: 8px 0 0 0; padding-left: 20px; font-size: 11px; color: #991b1b; font-weight: 500; line-height: 1.4;">
                                     <li><strong>Degradación:</strong> Desvío en la asertividad predictiva bajo condiciones estacionales atípicas en demanda.</li>
@@ -1079,9 +1088,8 @@ if resources_ok:
                 fig_gauge = go.Figure(go.Indicator(
                     mode = "gauge+number+delta",
                     value = latest_mae_movil,
-                    domain = {'x': [0, 1], 'y': [0, 1]},
-                    title = {'text': "Velocímetro de Deriva (MAE Móvil 7d)", 'font': {'size': 12, 'family': 'Outfit', 'color': '#0f172a', 'weight': 'bold'}},
-                    delta = {'reference': 35.0, 'increasing': {'color': "#dc2626"}, 'decreasing': {'color': "#16803d"}},
+                    domain = {'x': [0.15, 0.85], 'y': [0.05, 0.85]},
+                    delta = {'reference': MAE_THRESHOLD, 'increasing': {'color': "#dc2626"}, 'decreasing': {'color': "#16803d"}},
                     gauge = {
                         'axis': {'range': [0, 60], 'tickwidth': 1, 'tickcolor': "#94a3b8", 'tickfont': {'family': 'Outfit', 'size': 9, 'color': '#94a3b8'}},
                         'bar': {'color': "#0f172a"},
@@ -1090,19 +1098,27 @@ if resources_ok:
                         'bordercolor': "#e2e8f0",
                         'steps': [
                             {'range': [0, 25], 'color': '#dcfce7'},
-                            {'range': [25, 35], 'color': '#fef3c7'},
-                            {'range': [35, 60], 'color': '#fee2e2'}
+                            {'range': [25, MAE_THRESHOLD], 'color': '#fef3c7'},
+                            {'range': [MAE_THRESHOLD, 60], 'color': '#fee2e2'}
                         ],
                         'threshold': {
                             'line': {'color': "#dc2626", 'width': 3},
                             'thickness': 0.75,
-                            'value': 35.0
+                            'value': MAE_THRESHOLD
                         }
                     }
                 ))
                 fig_gauge.update_layout(
+                    title={
+                        'text': "<b>Velocímetro de Deriva (MAE Móvil 7d)</b>",
+                        'y': 0.9,
+                        'x': 0.5,
+                        'xanchor': 'center',
+                        'yanchor': 'top',
+                        'font': {'size': 12, 'family': 'Outfit', 'color': '#0f172a'}
+                    },
                     height=240, 
-                    margin=dict(l=20, r=20, t=30, b=10),
+                    margin=dict(l=30, r=30, t=65, b=15),
                     paper_bgcolor='rgba(0,0,0,0)',
                     font=dict(family='Outfit', size=11)
                 )
@@ -1122,8 +1138,8 @@ if resources_ok:
             fig_telemetry.add_trace(go.Scatter(x=df_metrics['fecha'], y=df_metrics['mae_movil'],
                                                 mode='lines', name='MAE Móvil (7d)',
                                                 line=dict(color='#6366f1', width=2)))
-            fig_telemetry.add_trace(go.Scatter(x=df_metrics['fecha'], y=[35.0]*len(df_metrics),
-                                                mode='lines', name='Límite de Alerta (35.0)',
+            fig_telemetry.add_trace(go.Scatter(x=df_metrics['fecha'], y=[MAE_THRESHOLD]*len(df_metrics),
+                                                mode='lines', name=f'Límite de Alerta ({MAE_THRESHOLD})',
                                                 line=dict(color='#ef4444', width=1.5, dash='dash')))
             fig_telemetry.update_layout(
                 xaxis_title="Fecha de Monitoreo",
@@ -1163,9 +1179,9 @@ if resources_ok:
                     st.rerun()
 
             with st.expander("🧪 **Simular Nueva Evaluación Diaria (Probar Alerta de Data Drift)**", expanded=False):
-                st.markdown("""
+                st.markdown(f"""
                 Usa este simulador interactivo para registrar nuevos días de monitoreo y evaluar la estabilidad del modelo.
-                * **Tip:** Desliza el **MAE del día** a un valor alto (ej. `> 45.0`) para ver cómo la media móvil cruza el umbral crítico de **35.0** y activa la alerta de Data Drift.
+                * **Tip:** Desliza el **MAE del día** a un valor alto para ver cómo la media móvil cruza el umbral crítico de **{MAE_THRESHOLD}** y activa la alerta de Data Drift.
                 """)
                 
                 with st.form("simular_evaluacion"):
@@ -1208,7 +1224,7 @@ if resources_ok:
                             
                             running_mae_movil = float(np.mean(maes_in_window))
                             metrics_data[i]["mae_movil"] = round(running_mae_movil, 2)
-                            metrics_data[i]["drift_detected"] = running_mae_movil > 35.0
+                            metrics_data[i]["drift_detected"] = running_mae_movil > MAE_THRESHOLD
                             
                         # Save back to JSON
                         with open(METRICS_PATH, "w", encoding="utf-8") as f:
